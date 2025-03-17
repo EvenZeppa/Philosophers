@@ -6,7 +6,7 @@
 /*   By: ezeppa <ezeppa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 11:06:51 by ezeppa            #+#    #+#             */
-/*   Updated: 2025/02/04 11:49:26 by ezeppa           ###   ########.fr       */
+/*   Updated: 2025/03/17 12:05:07 by ezeppa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	print_status(t_philosopher *philo, const char *status)
 	pthread_mutex_lock(&philo->data->print_lock);
 	if (!philo->data->stop_simulation)
 	{
-		ft_printf("%ld %d %s\n",
+		ft_printf("%d %d %s\n",
 			get_timestamp() - philo->data->start_time, philo->id, status);
 	}
 	pthread_mutex_unlock(&philo->data->print_lock);
