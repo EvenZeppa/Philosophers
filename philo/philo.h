@@ -6,7 +6,7 @@
 /*   By: ezeppa <ezeppa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 11:02:41 by ezeppa            #+#    #+#             */
-/*   Updated: 2025/02/04 11:51:47 by ezeppa           ###   ########.fr       */
+/*   Updated: 2025/03/17 16:44:04 by ezeppa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 # include <pthread.h>
 # include <unistd.h>
 # include <sys/time.h>
-# include "libft.h"
 
 # define TRUE 1
 
@@ -58,5 +57,7 @@ t_data	*initialize_data(int argc, char **argv);
 
 void	monitor_check_die(t_data *data, t_philosopher *philo);
 void	monitor_philosophers(t_data *data);
+
+int		ft_atoi(const char *nptr);
 
 #endif

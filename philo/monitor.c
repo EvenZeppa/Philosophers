@@ -6,7 +6,7 @@
 /*   By: ezeppa <ezeppa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 11:48:26 by ezeppa            #+#    #+#             */
-/*   Updated: 2025/03/17 13:05:02 by ezeppa           ###   ########.fr       */
+/*   Updated: 2025/03/17 16:43:55 by ezeppa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	monitor_check_die(t_data *data, t_philosopher *philo)
 		pthread_mutex_lock(&data->print_lock);
 		if (!data->stop_simulation)
 		{
-			ft_printf("%d %d died\n",
+			printf("%ld %d died\n",
 				get_timestamp() - data->start_time, philo->id);
 			data->stop_simulation = 1;
 		}
@@ -74,4 +74,27 @@ void	cleanup(t_data *data)
 	pthread_mutex_destroy(&data->print_lock);
 	free(data);
 	data = NULL;
+}
+
+int	ft_atoi(const char *nptr)
+{
+	int	nb;
+	int	sign;
+
+	nb = 0;
+	sign = 1;
+	while (*nptr == 32 || (*nptr >= 9 && *nptr <= 13))
+		nptr++;
+	if (*nptr == '+' || *nptr == '-')
+	{
+		if (*nptr == '-')
+			sign = -1;
+		nptr++;
+	}
+	while (*nptr >= '0' && *nptr <= '9')
+	{
+		nb = nb * 10 + (*nptr - '0');
+		nptr++;
+	}
+	return (sign * nb);
 }

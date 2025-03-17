@@ -6,7 +6,7 @@
 /*   By: ezeppa <ezeppa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 11:06:51 by ezeppa            #+#    #+#             */
-/*   Updated: 2025/03/17 13:04:59 by ezeppa           ###   ########.fr       */
+/*   Updated: 2025/03/17 16:38:20 by ezeppa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	print_status(t_philosopher *philo, const char *status)
 	pthread_mutex_lock(&philo->data->print_lock);
 	if (!philo->data->stop_simulation)
 	{
-		ft_printf("%d %d %s\n",
+		printf("%ld %d %s\n",
 			get_timestamp() - philo->data->start_time, philo->id, status);
 	}
 	pthread_mutex_unlock(&philo->data->print_lock);
@@ -49,10 +49,10 @@ void	*philosopher_routine(void *arg)
 
 	philo = (t_philosopher *)arg;
 	one_philosopher_routine(philo);
+	if (philo->id % 2 == 0)
+		usleep(1000);
 	while (!philo->data->stop_simulation)
 	{
-		if (philo->id % 2 == 0)
-			usleep(1000);
 		print_status(philo, "is thinking");
 		pthread_mutex_lock(philo->left_fork);
 		print_status(philo, "has taken a fork");
@@ -64,6 +64,8 @@ void	*philosopher_routine(void *arg)
 		philo->meals_eaten++;
 		pthread_mutex_unlock(philo->right_fork);
 		pthread_mutex_unlock(philo->left_fork);
+		if (philo->data->stop_simulation)
+			return (NULL);
 		print_status(philo, "is sleeping");
 		usleep(philo->data->time_to_sleep * 1000);
 	}
@@ -77,14 +79,14 @@ int	main(int argc, char **argv)
 
 	if (argc < 5 || argc > 6)
 	{
-		ft_printf("Usage: %s"
+		printf("Usage: %s"
 			" number_of_philosophers time_to_die time_to_eat time_to_sleep"
 			" [number_of_times_each_philosopher_must_eat]\n", argv[0]);
 		return (1);
 	}
 	data = initialize_data(argc, argv);
 	if (!data)
-		return (ft_printf("Error initializing data\n"), 1);
+		return (printf("Error initializing data\n"), 1);
 	i = -1;
 	while (++i < data->num_philosophers)
 		pthread_create(&data->philosophers[i].thread,
