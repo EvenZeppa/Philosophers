@@ -6,7 +6,7 @@
 /*   By: ezeppa <ezeppa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 11:48:22 by ezeppa            #+#    #+#             */
-/*   Updated: 2025/02/04 11:49:14 by ezeppa           ###   ########.fr       */
+/*   Updated: 2025/03/17 13:07:17 by ezeppa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,16 @@ void	initialize_forks(t_data *data)
 	}
 }
 
+void	initialize_one_philosopher(t_data *data)
+{
+	data->philosophers[0].id = 1;
+	data->philosophers[0].meals_eaten = 0;
+	data->philosophers[0].last_meal_time = data->start_time;
+	data->philosophers[0].left_fork = &data->forks[0];
+	data->philosophers[0].right_fork = NULL;
+	data->philosophers[0].data = data;
+}
+
 void	initialize_philosophers(t_data *data)
 {
 	int	i;
@@ -34,7 +44,7 @@ void	initialize_philosophers(t_data *data)
 		data->philosophers[i].id = i + 1;
 		data->philosophers[i].meals_eaten = 0;
 		data->philosophers[i].last_meal_time = data->start_time;
-		if (i % 2 == 0)
+		if (i % 2 == 0 || data->num_philosophers % 2 == 1)
 		{
 			data->philosophers[i].left_fork = &data->forks[i];
 			data->philosophers[i].right_fork
@@ -74,6 +84,8 @@ t_data	*initialize_data(int argc, char **argv)
 		return (cleanup(data), NULL);
 	pthread_mutex_init(&data->print_lock, NULL);
 	initialize_forks(data);
+	if (data->num_philosophers == 1)
+		return (initialize_one_philosopher(data), data);
 	initialize_philosophers(data);
 	return (data);
 }

@@ -6,7 +6,7 @@
 /*   By: ezeppa <ezeppa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 11:48:26 by ezeppa            #+#    #+#             */
-/*   Updated: 2025/03/17 11:40:50 by ezeppa           ###   ########.fr       */
+/*   Updated: 2025/03/17 13:05:02 by ezeppa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,27 @@ void	monitor_philosophers(t_data *data)
 			data->stop_simulation = 1;
 		usleep(500);
 	}
+}
+
+void	cleanup(t_data *data)
+{
+	int	i;
+
+	if (!data)
+		return ;
+	if (data->forks)
+	{
+		i = 0;
+		while (i < data->num_philosophers)
+		{
+			pthread_mutex_destroy(&data->forks[i]);
+			i++;
+		}
+		free(data->forks);
+	}
+	if (data->philosophers)
+		free(data->philosophers);
+	pthread_mutex_destroy(&data->print_lock);
+	free(data);
+	data = NULL;
 }

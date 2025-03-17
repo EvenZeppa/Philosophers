@@ -6,7 +6,7 @@
 /*   By: ezeppa <ezeppa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 11:06:51 by ezeppa            #+#    #+#             */
-/*   Updated: 2025/03/17 12:05:07 by ezeppa           ###   ########.fr       */
+/*   Updated: 2025/03/17 13:04:59 by ezeppa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,24 @@ void	print_status(t_philosopher *philo, const char *status)
 	pthread_mutex_unlock(&philo->data->print_lock);
 }
 
+void	one_philosopher_routine(t_philosopher *philo)
+{
+	if (philo->right_fork)
+		return ;
+	print_status(philo, "is thinking");
+	pthread_mutex_lock(philo->left_fork);
+	print_status(philo, "has taken a fork");
+	while (!philo->data->stop_simulation)
+		usleep(1000);
+	pthread_mutex_unlock(philo->left_fork);
+}
+
 void	*philosopher_routine(void *arg)
 {
 	t_philosopher	*philo;
 
 	philo = (t_philosopher *)arg;
+	one_philosopher_routine(philo);
 	while (!philo->data->stop_simulation)
 	{
 		if (philo->id % 2 == 0)
@@ -55,29 +68,6 @@ void	*philosopher_routine(void *arg)
 		usleep(philo->data->time_to_sleep * 1000);
 	}
 	return (NULL);
-}
-
-void	cleanup(t_data *data)
-{
-	int	i;
-
-	if (!data)
-		return ;
-	if (data->forks)
-	{
-		i = 0;
-		while (i < data->num_philosophers)
-		{
-			pthread_mutex_destroy(&data->forks[i]);
-			i++;
-		}
-		free(data->forks);
-	}
-	if (data->philosophers)
-		free(data->philosophers);
-	pthread_mutex_destroy(&data->print_lock);
-	free(data);
-	data = NULL;
 }
 
 int	main(int argc, char **argv)
